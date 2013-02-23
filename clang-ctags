@@ -184,13 +184,36 @@ class Etags:
 class Ctags:
     """Write tags in the format understood by Vi.
 
-    Not yet implemented. The man page for Exuberant Ctags
-    (http://ctags.sourceforge.net) documents the tags file format.
+    See http://vimdoc.sourceforge.net/htmldoc/tagsrch.html
     """
 
-    def  __init__(self):
-        error("Ctags (vi) format not implemented. "
-              "Use '-e' for etags (Emacs) format.")
+    def __init__(self):
+        self.tags = {}  # {file: [(line, tag, linenumber, bytenumber), ...]}
+        self.current_file_name = None
+        self.current_file_lines = None
+
+    def tag(self, cursor, tagname):
+        """The complete tags file entry for symbol 'tag'."""
+        if self.current_file_name != os.path.realpath(cursor.location.file.name):
+            self.current_file_name = os.path.realpath(cursor.location.file.name)
+            with open(self.current_file_name) as f:
+                self.current_file_lines = f.readlines()
+
+        if self.current_file_name not in self.tags:
+            self.tags[self.current_file_name] = set()
+
+        self.tags[self.current_file_name].add((
+            self.current_file_lines[cursor.location.line - 1].rstrip(),
+            tagname,
+            cursor.location.line,
+            cursor.location.offset))
+
+    def getvalue(self):
+        out = StringIO.StringIO()
+        for f in self.tags:
+            for t in self.tags[f]:
+                out.write(t[1] + "\t" + f + "\t" + str(t[2]) + "\n")
+        return out.getvalue()
 
 
 class cwd:

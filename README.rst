@@ -14,6 +14,26 @@ Generate tag file for C++ source code
 :Manual section: 1
 :Manual group: Clang Tools Documentation
 
+IMPROVEMENTS
+============
+
+I forked this project to add vi-compatible tags generation.
+
+
+EXAMPLES
+========
+
+To generate vi-compatible tags file, run::
+
+    $ python clang-ctags test/nested.cpp -f tags
+    $ cat tags
+      s	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	9
+      n2	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	6
+      n2::s	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	7
+      n1	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	1
+      n1::n2::s	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	3
+      n1::n2	/usr/home/youjumpiwatch/repos/clang-ctags/test/nested.cpp	2
+
 
 SYNOPSIS
 ========
@@ -34,7 +54,7 @@ specified files.
 (Hereafter both variants will be collectively referred to as clang-ctags,
 except where distiguished.)
 
-Note that only the Emacs (etags) format is currently implemented.
+Note that only the Emacs (etags) format is currently implemented. BUT THIS FORK SUPPORTS VIM.
 
 Unlike other ctags implementations, clang-ctags uses a real C++ compiler
 (clang) to parse source files, allowing for more accurate indexing. (C++ is
